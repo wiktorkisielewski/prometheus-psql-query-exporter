@@ -1,6 +1,6 @@
 image:
   name: wiktorkisielewski/prometheus-psql-exporter
-  tag: 0.0.1
+  tag: 0.0.3
 
 # each query should return a single value
 queries:

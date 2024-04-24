@@ -1,0 +1,6 @@
+apiVersion: v2
+name: prometheus-psql-exporter
+description: Prometheus exporter for PostgreSQL queries
+type: application
+version: 0.1.0
+appVersion: 0.0.3
