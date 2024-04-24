@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
     while True:
         # Execute each query and update Prometheus metric
-        for query_name, query in queries.items():
+        for query in queries:
             connection_string = f"dbname='{query.get('database')}' user='{db_user}' host='{db_host}' port='{db_port}' password='{db_password}'"
             result = execute_query(connection_string, query.get('query'))
             if result is not None:
