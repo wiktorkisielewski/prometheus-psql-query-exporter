@@ -19,17 +19,18 @@ spec:
           ports:
             - containerPort: 8000
           env:
-            - name: DB_HOST
-              value: {{ .Values.database.host }}
-            - name: DB_PORT
-              value: {{ .Values.database.port }}
-            - name: DB_USER
-              value: {{ .Values.database.auth.user }}
-            - name: DB_PASSWORD
-              value: {{ .Values.database.auth.password }}
 {{- range .Values.queries }}
             - name: {{ .name | upper | replace "-" "_" }}_QUERY
               value: {{ .query | quote }}
             - name: {{ .name | upper | replace "-" "_" }}_DATABASE
               value: {{ .databaseName | quote }}
 {{- end }}
+{{ if eq .Values.databaseCredentials.source.kind "secret" }}
+          envFrom:
+          - secretRef:
+              name: {{ .Values.databaseCredentials.source.name }}
+{{ else if eq .Values.databaseCredentials.source.kind "cm" }}
+          envFrom:
+          - configMapRef:
+              name: {{ .Values.databaseCredentials.source.name }}
+{{ end }}

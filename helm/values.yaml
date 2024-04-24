@@ -11,9 +11,8 @@ queries:
     query: "SELECT COUNT(*) FROM OTHER_TABLE;"
     databaseName: other_database
 
-database:
-  host: "1.2.3.4"
-  port: 5432
-  auth:
-    user: "postgres"
-    password: "postgres"
+databaseCredentials:
+  # source.kind can be set to "cm" [configMap] or "secret"
+  source: 
+    kind: cm
+    name: cm_name
