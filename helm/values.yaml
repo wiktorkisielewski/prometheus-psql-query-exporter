@@ -1,0 +1,19 @@
+image:
+  name: wiktorkisielewski/prometheus-psql-exporter
+  tag: 0.0.1
+
+# each query should return a single value
+queries:
+  - name: example-query
+    query: "SELECT COUNT(*) FROM SOME_TABLE;"
+    databaseName: some_database
+  - name: example-query-2
+    query: "SELECT COUNT(*) FROM OTHER_TABLE;"
+    databaseName: other_database
+
+database:
+  host: "1.2.3.4"
+  port: 5432
+  auth:
+    user: "postgres"
+    password: "postgres"

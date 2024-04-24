@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-app
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-app
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-app
+          image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DB_HOST
+              value: {{ .Values.database.host }}
+            - name: DB_PORT
+              value: {{ .Values.database.port }}
+            - name: DB_USER
+              value: {{ .Values.database.auth.user }}
+            - name: DB_PASSWORD
+              value: {{ .Values.database.auth.password }}
+{{- range .Values.queries }}
+            - name: {{ .name | upper | replace "-" "_" }}_QUERY
+              value: {{ .query | quote }}
+            - name: {{ .name | upper | replace "-" "_" }}_DATABASE
+              value: {{ .databaseName | quote }}
+{{- end }}
