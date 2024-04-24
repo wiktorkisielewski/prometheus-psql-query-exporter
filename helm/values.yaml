@@ -15,4 +15,4 @@ databaseCredentials:
   # source.kind can be set to "cm" [configMap] or "secret"
   source: 
     kind: cm
-    name: cm_name
+    name: "cm-name"
