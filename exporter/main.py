@@ -17,8 +17,6 @@ def create_query_alerts():
     queries = get_env_vars_ending_with("_ALERT_QUERY")
     query_alerts = []
 
-    print(queries)
-
     for query in queries:
         query_name = query
         query = os.environ.get(query_name)
@@ -27,7 +25,7 @@ def create_query_alerts():
 
         query_alerts.append({"name": query_name, "query": query, "database": query_db})
 
-    print(query_alerts)
+    return query_alerts
 
 def execute_query(connection_string, query):
     try:
@@ -54,23 +52,24 @@ if __name__ == '__main__':
     db_user = os.environ.get('POSTGRES_USER')
     db_password = os.environ.get('POSTGRES_PASSWORD')
 
-    # Construct connection string
-    connection_string = f"dbname='postgres' user='{db_user}' host='{db_host}' port='{db_port}' password='{db_password}'"
-    create_query_alerts()
-    # Read queries from environment variables
-    queries = {
-        "example-query": os.environ.get('EXAMPLE_QUERY'),
-        "example-query-2": os.environ.get('EXAMPLE_QUERY_2')
-    }
+    queries = create_query_alerts()
+    # [{'name': 'EXAMPLE_QUERY_ALERT_QUERY', 'query': 'SELECT COUNT(*) FROM SOME_TABLE;', 'database': 'some_database'}, {'name': 'EXAMPLE_QUERY_2_ALERT_QUERY', 'query': 'SELECT COUNT(*) FROM OTHER_TABLE;', 'database': 'other_database'}]
+
+    # queries = {
+    #     "example-query": os.environ.get('EXAMPLE_QUERY'),
+    #     "example-query-2": os.environ.get('EXAMPLE_QUERY_2')
+    # }
+
 
     # Create Prometheus metrics for each query
-    for query_name, _ in queries.items():
-        metrics[query_name] = Gauge(query_name, f'Result of {query_name}')
+    for query in queries:
+        metrics[query.get('name')] = Gauge(query.get('name'), f'Result of {query.get('name')}')
 
     while True:
         # Execute each query and update Prometheus metric
         for query_name, query in queries.items():
-            result = execute_query(connection_string, query)
+            connection_string = f"dbname='{query.get('database')}' user='{db_user}' host='{db_host}' port='{db_port}' password='{db_password}'"
+            result = execute_query(connection_string, query.get('query'))
             if result is not None:
                 metrics[query_name].set(result)
 
