@@ -20,9 +20,9 @@ spec:
             - containerPort: 8000
           env:
 {{- range .Values.queries }}
-            - name: {{ .name | upper | replace "-" "_" }}_QUERY
+            - name: {{ .name | upper | replace "-" "_" }}_ALERT_QUERY
               value: {{ .query | quote }}
-            - name: {{ .name | upper | replace "-" "_" }}_DATABASE
+            - name: {{ .name | upper | replace "-" "_" }}_ALERT_QUERY_DATABASE
               value: {{ .databaseName | quote }}
 {{- end }}
 {{ if eq .Values.databaseCredentials.source.kind "secret" }}

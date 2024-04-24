@@ -6,6 +6,29 @@ import time
 # Define Prometheus metrics
 metrics = {}
 
+def get_env_vars_ending_with(suffix):
+    env_vars = {}
+    for key, value in os.environ.items():
+        if key.endswith(suffix):
+            env_vars[key] = value
+    return env_vars
+
+def create_query_alerts():
+    queries = get_env_vars_ending_with("_ALERT_QUERY")
+    query_alerts = []
+
+    print(queries)
+
+    for query in queries:
+        query_name = query
+        query = os.environ.get(query_name)
+        query_db = os.environ.get(f'{query_name}_DATABASE')
+        print(query_name, query, query_db)
+
+        query_alerts.append({"name": query_name, "query": query, "database": query_db})
+
+    print(query_alerts)
+
 def execute_query(connection_string, query):
     try:
         conn = psycopg2.connect(connection_string)
@@ -33,7 +56,7 @@ if __name__ == '__main__':
 
     # Construct connection string
     connection_string = f"dbname='postgres' user='{db_user}' host='{db_host}' port='{db_port}' password='{db_password}'"
-
+    create_query_alerts()
     # Read queries from environment variables
     queries = {
         "example-query": os.environ.get('EXAMPLE_QUERY'),
