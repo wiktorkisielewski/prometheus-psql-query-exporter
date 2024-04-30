@@ -17,10 +17,13 @@ def create_query_alerts():
     queries = get_env_vars_ending_with("_ALERT_QUERY")
     query_alerts = []
 
+    print("Monitored queries:")
+
     for query in queries:
         query_name = query
         query = os.environ.get(query_name)
         query_db = os.environ.get(f'{query_name}_DATABASE')
+
         print(query_name, query, query_db)
 
         query_alerts.append({"name": query_name, "query": query, "database": query_db})
@@ -71,6 +74,8 @@ if __name__ == '__main__':
         for query in queries:
             connection_string = f"dbname='{query.get('database')}' user='{db_user}' host='{db_host}' port='{db_port}' password='{db_password}'"
             result = execute_query(connection_string, query.get('query'))
+            print(str(connection_string))
+            print(str(result))
             if result is not None:
                 metrics[query_name].set(result)
 
