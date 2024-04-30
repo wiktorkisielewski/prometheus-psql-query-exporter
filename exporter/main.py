@@ -17,14 +17,10 @@ def create_query_alerts():
     queries = get_env_vars_ending_with("_ALERT_QUERY")
     query_alerts = []
 
-    print("Monitored queries:")
-
     for query in queries:
         query_name = query
         query = os.environ.get(query_name)
         query_db = os.environ.get(f'{query_name}_DATABASE')
-
-        print(query_name, query, query_db)
 
         query_alerts.append({"name": query_name, "query": query, "database": query_db})
 
@@ -56,18 +52,14 @@ if __name__ == '__main__':
     db_password = os.environ.get('POSTGRES_PASSWORD')
 
     queries = create_query_alerts()
-    # [{'name': 'EXAMPLE_QUERY_ALERT_QUERY', 'query': 'SELECT COUNT(*) FROM SOME_TABLE;', 'database': 'some_database'}, {'name': 'EXAMPLE_QUERY_2_ALERT_QUERY', 'query': 'SELECT COUNT(*) FROM OTHER_TABLE;', 'database': 'other_database'}]
-
-    # queries = {
-    #     "example-query": os.environ.get('EXAMPLE_QUERY'),
-    #     "example-query-2": os.environ.get('EXAMPLE_QUERY_2')
-    # }
-
 
     # Create Prometheus metrics for each query
     for query in queries:
         query_name = query.get('name')
+        print(f'Creating a metric {query_name}, based on result of:\n{query.get('query')}')
         metrics[query_name] = Gauge(query_name, f'Result of {query_name}')
+
+    print(metrics)
 
     while True:
         # Execute each query and update Prometheus metric
