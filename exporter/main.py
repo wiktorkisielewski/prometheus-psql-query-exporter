@@ -56,7 +56,7 @@ if __name__ == '__main__':
     # Create Prometheus metrics for each query
     for query in queries:
         query_name = query.get('name')
-        print(f'Creating a metric {query_name}, based on result of:\n{query.get('query')}')
+        print(f"Creating a metric {query_name}, based on result of:\n{query.get('query')}")
         metrics[query_name] = Gauge(query_name, f'Result of {query_name}')
 
     print(metrics)
