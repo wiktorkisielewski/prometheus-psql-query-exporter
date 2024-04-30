@@ -66,10 +66,9 @@ if __name__ == '__main__':
         for query in queries:
             connection_string = f"dbname='{query.get('database')}' user='{db_user}' host='{db_host}' port='{db_port}' password='{db_password}'"
             result = execute_query(connection_string, query.get('query'))
-            print(str(connection_string))
-            print(str(result))
-            # if result is not None:
-            metrics[query_name].set(result)
+            
+            if result is not None:
+                metrics[query.get('name')].set(result)
 
         # Sleep for some time before executing the queries again
         time.sleep(60)  # Example: Query every minute
