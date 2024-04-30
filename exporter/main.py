@@ -68,8 +68,8 @@ if __name__ == '__main__':
             result = execute_query(connection_string, query.get('query'))
             print(str(connection_string))
             print(str(result))
-            if result is not None:
-                metrics[query_name].set(result)
+            # if result is not None:
+            metrics[query_name].set(result)
 
         # Sleep for some time before executing the queries again
         time.sleep(60)  # Example: Query every minute
