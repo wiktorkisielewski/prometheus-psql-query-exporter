@@ -1,6 +1,6 @@
 # Prometheus SQL exporter
 
-This is a tool made for exposing metrics based on SQL query results in prometheus format.
+Expose SQL query results for porometheus.
 
 ## Helm deployment
 
